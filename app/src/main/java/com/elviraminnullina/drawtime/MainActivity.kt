@@ -1,74 +1,77 @@
 package com.elviraminnullina.drawtime
 
-import android.content.Context
-import android.graphics.Canvas
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
-import android.view.View
+import android.view.Choreographer
 import android.view.ViewTreeObserver
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
 import kotlinx.android.synthetic.main.activity_main.*
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Choreographer.FrameCallback {
 
     private val TAG = "TEST"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.e(TAG, "onCreate: " + System.currentTimeMillis().toString())
 
-       // val vto: ViewTreeObserver = text_view.viewTreeObserver
-       /* vto.addOnDrawListener {
-            Log.e(TAG, System.currentTimeMillis().toString())
-            // Do whatever you need to do...
-        }
-*/
-        //firstTimeWorks()
+        // forAnimation()
+        // firstTimeWorks()
+        // secondCase()
+        secondCase()
 
-        /* Log.e(TAG, container.drawingTime.toString())
-         Log.e(TAG, text_view.drawingTime.toString())
-
-
-         button.setOnClickListener{
-             text_view.setBackgroundColor(resources.getColor(R.color.colorAccent))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorAccent))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorAccent))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-             Log.e(TAG, text_view.drawingTime.toString())
-             text_view.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
-             Log.e(TAG, text_view.drawingTime.toString())
-         }
- */
         button.setOnClickListener {
             // text_view.visibility = View.VISIBLE
-             text_view.setBackgroundColor(resources.getColor(R.color.colorAccent))
-            /*
-             text_view.setTextColor(resources.getColor(R.color.colorPrimaryDark))
-             text_view.setTextColor(resources.getColor(R.color.colorAccent))
-             text_view.setTextColor(resources.getColor(R.color.colorPrimaryDark))
-             text_view.setTextColor(resources.getColor(R.color.colorAccent))*/
+            text_view.setBackgroundColor(resources.getColor(R.color.colorAccent))
+
+            text_view.setTextColor(resources.getColor(R.color.colorPrimaryDark))
+            text_view.setTextColor(resources.getColor(R.color.colorAccent))
+            text_view.setTextColor(resources.getColor(R.color.colorPrimaryDark))
+            text_view.setTextColor(resources.getColor(R.color.colorAccent))
         }
     }
 
+    private fun secondCase() {
+        val vto: ViewTreeObserver = container.viewTreeObserver
+        vto.addOnDrawListener {
+            Log.e(TAG, "viewTreeObserver: " + System.currentTimeMillis().toString())
+            // Do whatever you need to do...
+        }
+    }
+
+
     private fun firstTimeWorks() {
-        text_view.post(Runnable {
+        text_view.post {
             kotlin.run {
                 Log.e(TAG, System.currentTimeMillis().toString())
             }
+        }
+    }
+
+    private fun forAnimation() {
+        val am1 = AnimationUtils.loadAnimation(applicationContext, R.anim.my_anim)
+
+        container.startAnimation(am1)
+        am1.setAnimationListener(object : AnimationListener {
+            override fun onAnimationStart(animation: Animation) { // TODO Auto-generated method stub
+            }
+
+            override fun onAnimationRepeat(animation: Animation) { // TODO Auto-generated method stub
+            }
+
+            override fun onAnimationEnd(animation: Animation) { // Pass the Intent to switch to other Activity
+
+                Log.e(TAG, "anim: " + System.currentTimeMillis().toString())
+            }
         })
+    }
+
+
+    override fun doFrame(frameTimeNanos: Long) {
+        Log.e(TAG, "Frame: " + frameTimeNanos.toString())
     }
 }
 
