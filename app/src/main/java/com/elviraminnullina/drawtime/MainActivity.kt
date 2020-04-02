@@ -13,29 +13,54 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), Choreographer.FrameCallback {
 
     private val TAG = "TEST"
+    var curr_color = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.e(TAG, "onCreate: " + System.currentTimeMillis().toString())
+        Log.e(TAG, "onCreate: " + System.nanoTime().toString())
 
         // forAnimation()
         // firstTimeWorks()
         // secondCase()
-        secondCase()
+        // secondCase()
 
         button.setOnClickListener {
             // text_view.visibility = View.VISIBLE
-            text_view.setBackgroundColor(resources.getColor(R.color.colorAccent))
-
-            text_view.setTextColor(resources.getColor(R.color.colorPrimaryDark))
-            text_view.setTextColor(resources.getColor(R.color.colorAccent))
-            text_view.setTextColor(resources.getColor(R.color.colorPrimaryDark))
-            text_view.setTextColor(resources.getColor(R.color.colorAccent))
+            //text_view.setBackgroundColor(resources.getColor(R.color.colorAccent))
         }
+        Choreographer.getInstance().postFrameCallback(this)
+       /* Choreographer.getInstance().postFrameCallback {
+            Log.e(TAG, "postFrameCallback: $it")
+        }*/
+      //  mainLooper.
+
+       // doFrameCus()
     }
 
+    override fun doFrame(frameTime: Long) {
+        Log.e(TAG, "Frame s: "+ System.nanoTime())
+        Log.e(TAG, "Frame f: $frameTime")
+        setColor()
+        text_view.text = frameTime.toString().plus(" ").plus(curr_color)
+        Choreographer.getInstance().postFrameCallback(this)
+    }
+
+
+
+    private fun setColor(){
+      if(curr_color == "black"){
+          curr_color = "white"
+          container.background = getDrawable(R.drawable.img_cat_mouse)
+          //put time
+      }else {
+          curr_color = "black"
+          container.background = getDrawable(R.drawable.ic_lighthouse)
+      }
+    }
+
+
     private fun secondCase() {
-        val vto: ViewTreeObserver = container.viewTreeObserver
+        val vto: ViewTreeObserver = text_view.viewTreeObserver
         vto.addOnDrawListener {
             Log.e(TAG, "viewTreeObserver: " + System.currentTimeMillis().toString())
             // Do whatever you need to do...
@@ -44,7 +69,7 @@ class MainActivity : AppCompatActivity(), Choreographer.FrameCallback {
 
 
     private fun firstTimeWorks() {
-        text_view.post {
+        container.post {
             kotlin.run {
                 Log.e(TAG, System.currentTimeMillis().toString())
             }
@@ -70,8 +95,4 @@ class MainActivity : AppCompatActivity(), Choreographer.FrameCallback {
     }
 
 
-    override fun doFrame(frameTimeNanos: Long) {
-        Log.e(TAG, "Frame: " + frameTimeNanos.toString())
-    }
 }
-

@@ -13,8 +13,8 @@ class CustTextView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     private val TAG = "TEST"
     override fun onDraw(canvas: Canvas?) {
-        Log.e(TAG, System.currentTimeMillis().toString())
         super.onDraw(canvas)
+        //  Log.e(TAG, "CustomView: "+ System.currentTimeMillis().toString())
     }
 
 }
